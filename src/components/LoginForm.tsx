@@ -11,6 +11,7 @@ import {
   IconButton,
   Button,
   makeStyles,
+  Input,
 } from "@material-ui/core";
 import React from "react";
 import Visibility from "@material-ui/icons/Visibility";
@@ -22,6 +23,17 @@ const useStyles = makeStyles({
   },
   subtitle: {
     fontSize: "2rem",
+  },
+  card: {
+    width: "100%",
+    maxWidth: "400px",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  submit: {
+    alignSelf: "flex-end",
   },
 });
 
@@ -51,21 +63,22 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardContent>
         <Typography className={styles.subtitle} variant="h2">
-          Login
+          Account login
         </Typography>
-        <Box component="form" display="flex" flexDirection="column">
+        <Box marginBottom={1} />
+        <form className={styles.form}>
           <TextField
             onChange={handleChange("email")}
-            variant="filled"
             id="emailAddress"
             label="Email address"
           />
-          <FormControl variant="filled">
+          <Box marginBottom={2} />
+          <FormControl>
             <InputLabel htmlFor="password">Password</InputLabel>
-            <FilledInput
+            <Input
               id="password"
               onChange={handleChange("password")}
               type={values.showPassword ? "text" : "password"}
@@ -83,10 +96,11 @@ const LoginForm: React.FC = () => {
               }
             />
           </FormControl>
-          <Button variant="contained" color="primary">
-            Login
+          <Box marginBottom={2} />
+          <Button className={styles.submit} variant="contained" color="primary">
+            Sign in
           </Button>
-        </Box>
+        </form>
       </CardContent>
     </Card>
   );
