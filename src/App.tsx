@@ -6,6 +6,7 @@ import { StylesProvider, ThemeProvider } from "@material-ui/core/styles";
 import Home from "./pages/Home";
 import theme from "./theme";
 import Header from "./components/Header";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -15,8 +16,11 @@ function App() {
           <CssBaseline />
           <Header />
           <Switch>
-            <Route path="/">
+            <Route exact path="/">
               <Home />
+            </Route>
+            <Route path="/register">
+              <Register />
             </Route>
           </Switch>
         </ThemeProvider>
