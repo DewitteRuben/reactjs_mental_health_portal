@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Box } from "@material-ui/core";
 import LoginForm from "../components/LoginForm";
 
-const Home: React.FC = (props) => {
+const Home: React.FC = () => {
   return (
     <Container>
       <Box
