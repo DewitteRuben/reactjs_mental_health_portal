@@ -11,10 +11,12 @@ import {
   Button,
   makeStyles,
   Input,
+  FormHelperText,
 } from "@material-ui/core";
 import React from "react";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { isValidEmail } from "../utils/string";
 
 const useStyles = makeStyles({
   title: {
@@ -36,7 +38,45 @@ const useStyles = makeStyles({
   },
 });
 
-const LoginForm: React.FC = () => {
+const errorMap: {
+  [key: string]: {
+    message: string;
+    validation: (value1: string) => boolean;
+  };
+} = {
+  email: {
+    message: "This field must contain a valid email address.",
+    validation: (text: string) => !isValidEmail(text),
+  },
+  password: {
+    message: "This field is required.",
+    validation: (text: string) => !text.length,
+  },
+};
+
+const getErrorData = (
+  enabled: boolean,
+  key: keyof typeof errorMap,
+  value1: any
+) => {
+  const { message, validation } = errorMap[key];
+  return {
+    message,
+    state: enabled && validation(value1),
+    valid: validation(value1),
+  };
+};
+
+export interface ILoginFormData {
+  email: string;
+  password: string;
+}
+
+interface ILoginFormProps {
+  onSubmit?: (formData: ILoginFormData) => void;
+}
+
+const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit }) => {
   const styles = useStyles();
 
   const [values, setValues] = React.useState({
@@ -61,6 +101,23 @@ const LoginForm: React.FC = () => {
     event.preventDefault();
   };
 
+  const emailError = getErrorData(true, "email", values.email);
+  const passwordError = getErrorData(true, "password", values.password);
+
+  const validationState = [emailError.valid, passwordError.valid];
+
+  const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const { email, password } = values;
+
+    const isValid = validationState.filter((state) => state).length === 0;
+
+    if (isValid && onSubmit) {
+      onSubmit({ email, password });
+    }
+  };
+
   return (
     <Card className={styles.card}>
       <CardContent>
@@ -68,14 +125,16 @@ const LoginForm: React.FC = () => {
           Account login
         </Typography>
         <Box marginBottom={1} />
-        <form className={styles.form}>
+        <form onSubmit={handleOnSubmit} className={styles.form}>
           <TextField
             onChange={handleChange("email")}
             id="emailAddress"
+            error={emailError.state}
+            helperText={emailError.state && emailError.message}
             label="Email address"
           />
           <Box marginBottom={2} />
-          <FormControl>
+          <FormControl error={passwordError.state}>
             <InputLabel htmlFor="password">Password</InputLabel>
             <Input
               id="password"
@@ -94,9 +153,17 @@ const LoginForm: React.FC = () => {
                 </InputAdornment>
               }
             />
+            <FormHelperText>
+              {passwordError.state && passwordError.message}
+            </FormHelperText>
           </FormControl>
           <Box marginBottom={2} />
-          <Button className={styles.submit} variant="contained" color="primary">
+          <Button
+            type="submit"
+            className={styles.submit}
+            variant="contained"
+            color="primary"
+          >
             Sign in
           </Button>
         </form>
