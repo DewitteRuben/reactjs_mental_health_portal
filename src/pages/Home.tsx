@@ -12,10 +12,15 @@ const Home: React.FC = () => {
     const { email, password } = data;
     try {
       const resp = await auth(email, password);
-      const { token } = resp;
+      const { token, professional } = resp;
       dispatch({
         type: "UPDATE",
-        payload: { token, authenticated: true, status: "AUTHENTICATED" },
+        payload: {
+          token,
+          authenticated: true,
+          status: "AUTHENTICATED",
+          professional,
+        },
       });
     } catch (error) {}
   };

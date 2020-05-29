@@ -1,15 +1,18 @@
 import React from "react";
+import { IProfessional } from "../api/authApi";
 
-interface IAuthStore {
+export interface IAuthStore {
   status: "IDLE" | "REQUESTING" | "AUTHENTICATED";
   authenticated: boolean;
   token: string | null;
+  professional: IProfessional | null;
 }
 
 const initialState: IAuthStore = {
   status: "IDLE",
   authenticated: false,
   token: null,
+  professional: null,
 };
 
 type AuthStoreAction = { type: "UPDATE"; payload: Partial<IAuthStore> };
@@ -17,10 +20,11 @@ type AuthStoreAction = { type: "UPDATE"; payload: Partial<IAuthStore> };
 let reducer = (state: IAuthStore, action: AuthStoreAction) => {
   switch (action.type) {
     case "UPDATE":
-      const { status, authenticated, token } = action.payload;
+      const { status, authenticated, token, professional } = action.payload;
       return {
         ...state,
         ...(status && { status }),
+        ...(professional !== undefined && { professional }),
         ...(authenticated !== undefined && { authenticated }),
         ...(token !== undefined && { token }),
       };
