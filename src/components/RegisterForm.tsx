@@ -43,7 +43,7 @@ const useStyles = makeStyles({
   },
 });
 
-interface IRegisterFormData {
+export interface IRegisterFormData {
   firstName: string;
   lastName: string;
   email: string;
