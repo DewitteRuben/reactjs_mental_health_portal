@@ -10,6 +10,9 @@ import {
   createStyles,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import PersonIcon from "@material-ui/icons/Person";
+import { AuthContext } from "../store/authStore";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +27,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Header: React.FC = () => {
   const styles = useStyles();
+
+  const { state, dispatch } = React.useContext(AuthContext);
 
   return (
     <div>
@@ -40,7 +45,25 @@ const Header: React.FC = () => {
           <Typography variant="h6" className={styles.title}>
             Mental Health Portal
           </Typography>
-          <Button color="inherit">Login</Button>
+          {state.authenticated ? (
+            <Button
+              to="/profile"
+              component={Link}
+              color="inherit"
+              startIcon={<PersonIcon />}
+            >
+              Profile
+            </Button>
+          ) : (
+            <>
+              <Button to="/register" component={Link} color="inherit">
+                Register
+              </Button>
+              <Button to="/login" component={Link} color="inherit">
+                Login
+              </Button>
+            </>
+          )}
         </Toolbar>
       </AppBar>
     </div>
