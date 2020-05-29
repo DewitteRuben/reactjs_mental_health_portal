@@ -7,6 +7,8 @@ import Home from "./pages/Home";
 import theme from "./theme";
 import Header from "./components/Header";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import { AuthProvider } from "./store/authStore";
 
 function App() {
   return (
@@ -14,15 +16,20 @@ function App() {
       <StylesProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Header />
-          <Switch>
-            <Route exact path="/">
-              <Home />
-            </Route>
-            <Route path="/register">
-              <Register />
-            </Route>
-          </Switch>
+          <AuthProvider>
+            <Header />
+            <Switch>
+              <Route exact path="/">
+                <Home />
+              </Route>
+              <Route path="/register">
+                <Register />
+              </Route>
+              <Route path="/dashboard">
+                <Dashboard />
+              </Route>
+            </Switch>
+          </AuthProvider>
         </ThemeProvider>
       </StylesProvider>
     </Router>
