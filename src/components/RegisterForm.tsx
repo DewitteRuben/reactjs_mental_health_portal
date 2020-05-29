@@ -13,15 +13,11 @@ import {
   makeStyles,
   Input,
 } from "@material-ui/core";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { FormHelperText } from "@material-ui/core";
 import { isValidEmail } from "../utils/string";
+import Datepicker from "./Datepicker";
 
 const useStyles = makeStyles({
   title: {
@@ -226,23 +222,19 @@ const RegisterForm: React.FC<IRegisterFormProps> = ({ onSubmit }) => {
               onChange={handleChange("lastName")}
             />
           </Box>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format="dd/MM/yyyy"
-              margin="normal"
-              error={birthDateError.state}
-              helperText={birthDateError.state && birthDateError.message}
-              id="date-picker-birthdate"
-              label="Birthdate"
-              value={selectedDate}
-              onChange={handleDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
-            />
-          </MuiPickersUtilsProvider>
+          <Datepicker
+            disableToolbar
+            variant="inline"
+            format="dd/MM/yyyy"
+            margin="normal"
+            id="birthdate"
+            label="Birthdate"
+            value={selectedDate}
+            onChange={handleDateChange}
+            error={birthDateError.state}
+            helperText={birthDateError.state && birthDateError.message}
+            fullWidth
+          />
           <TextField
             onChange={handleChange("email")}
             margin="normal"
