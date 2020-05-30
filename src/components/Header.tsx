@@ -11,8 +11,10 @@ import {
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import PersonIcon from "@material-ui/icons/Person";
-import { AuthContext } from "../store/authStore";
 import { Link } from "react-router-dom";
+import { selectAuthenticated } from "../redux/selectors/authSelectors";
+import { connect } from "react-redux";
+import { IRootState } from "../redux/store";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,10 +27,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Header: React.FC = () => {
-  const styles = useStyles();
+interface IHeaderProps {
+  authenticated: boolean;
+}
 
-  const { state, dispatch } = React.useContext(AuthContext);
+const Header: React.FC<IHeaderProps> = ({ authenticated }) => {
+  const styles = useStyles();
 
   return (
     <div>
@@ -45,7 +49,7 @@ const Header: React.FC = () => {
           <Typography variant="h6" className={styles.title}>
             Mental Health Portal
           </Typography>
-          {state.authenticated ? (
+          {authenticated ? (
             <Button
               to="/profile"
               component={Link}
@@ -70,4 +74,8 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+const mapStateToProps = (state: IRootState) => ({
+  authenticated: selectAuthenticated(state),
+});
+
+export default connect(mapStateToProps)(Header);

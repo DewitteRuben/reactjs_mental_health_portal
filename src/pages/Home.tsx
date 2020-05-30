@@ -1,33 +1,27 @@
 import React from "react";
 import { Container, Box } from "@material-ui/core";
 import LoginForm, { ILoginFormData } from "../components/LoginForm";
-import { auth } from "../api/authApi";
-import { AuthContext } from "../store/authStore";
 import { Redirect } from "react-router-dom";
+import { IRootState } from "../redux/store";
+import { selectAuthenticated } from "../redux/selectors/authSelectors";
+import { connect } from "react-redux";
+import { fetchAuthUser } from "../redux/actions/authActions";
+import { ThunkDispatch } from "redux-thunk";
 
-const Home: React.FC = () => {
-  const { state, dispatch } = React.useContext(AuthContext);
+interface IHomeProps {
+  authenticated: boolean;
+  fetchAuth: (email: string, password: string) => void;
+}
 
-  const handleLogin = async (data: ILoginFormData) => {
-    const { email, password } = data;
-    try {
-      const resp = await auth(email, password);
-      const { token, professional } = resp;
-      dispatch({
-        type: "UPDATE",
-        payload: {
-          token,
-          authenticated: true,
-          status: "AUTHENTICATED",
-          professional,
-        },
-      });
-    } catch (error) {}
-  };
-
-  if (state.authenticated) {
+const Home: React.FC<IHomeProps> = ({ authenticated, fetchAuth }) => {
+  if (authenticated) {
     return <Redirect to="/dashboard" />;
   }
+
+  const handleLogin = async (formData: ILoginFormData) => {
+    const { email, password } = formData;
+    fetchAuth(email, password);
+  };
 
   return (
     <Container>
@@ -43,4 +37,13 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+const mapStateToProps = (state: IRootState) => ({
+  authenticated: selectAuthenticated(state),
+});
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({
+  fetchAuth: (email: string, password: string) =>
+    dispatch(fetchAuthUser(email, password)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

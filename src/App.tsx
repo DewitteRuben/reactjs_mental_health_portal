@@ -13,8 +13,9 @@ import theme from "./theme";
 import Header from "./components/Header";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import { AuthProvider } from "./store/authStore";
 import ClientDetail from "./pages/ClientDetail";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
       <StylesProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <AuthProvider>
+          <Provider store={store}>
             <Header />
             <Switch>
               <Route exact path="/">
@@ -41,7 +42,7 @@ function App() {
                 <ClientDetail />
               </Route>
             </Switch>
-          </AuthProvider>
+          </Provider>
         </ThemeProvider>
       </StylesProvider>
     </Router>
