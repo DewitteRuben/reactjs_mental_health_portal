@@ -10,6 +10,7 @@ import {
 
 interface IDialogProps {
   id?: string;
+  title: string;
   visible?: boolean;
   onVisibilityChange?: (visibility: boolean) => void;
   text?: string;
@@ -23,6 +24,7 @@ interface IDialogProps {
 
 const Dialog: React.FC<IDialogProps> = ({
   id,
+  title,
   children,
   visible,
   onVisibilityChange,
@@ -65,7 +67,7 @@ const Dialog: React.FC<IDialogProps> = ({
 
   return (
     <MUIDialog open={dialog} onClose={handleClose} aria-labelledby={id}>
-      <DialogTitle id={id}>Link client to professional</DialogTitle>
+      <DialogTitle id={id}>{title}</DialogTitle>
       <DialogContent>
         {text && <DialogContentText>{text}</DialogContentText>}
         {children}
