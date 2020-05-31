@@ -1,6 +1,14 @@
 import ApiError from "../errors/ApiError";
 import _ from "lodash";
 
+const createAuthHeader = (token: string) => {
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
+
 const request = async (
   endpoint: string,
   requestInit?: RequestInit,
@@ -19,7 +27,7 @@ const request = async (
     requestInit
   );
 
-  const resp = await fetch(`${process.env.REACT_APP_BASE_API_LOCAL}${endpoint}`, options);
+  const resp = await fetch(`/api${endpoint}`, options);
   const data = await (parseAs === "json" ? resp.json() : resp.text());
   if (resp.status !== 200) {
     throw new ApiError(data.error.message, resp.status);
@@ -27,4 +35,4 @@ const request = async (
   return data;
 };
 
-export { request };
+export { request, createAuthHeader };
