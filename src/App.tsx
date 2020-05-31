@@ -16,6 +16,12 @@ import Dashboard from "./pages/Dashboard";
 import ClientDetail from "./pages/ClientDetail";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import { fetchOrUpdateToken } from "./redux/actions/authActions";
+import { ThunkDispatch } from "redux-thunk";
+
+const thunkDispatch: ThunkDispatch<{}, {}, any> = store.dispatch;
+
+thunkDispatch(fetchOrUpdateToken());
 
 function App() {
   return (

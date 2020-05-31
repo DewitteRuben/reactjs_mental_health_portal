@@ -66,6 +66,24 @@ const checkToken = async (
   });
 };
 
+const fetchOrUpdateToken = () => async (
+  dispatch: Dispatch,
+  getState: () => IRootState
+) => {
+  try {
+    dispatch(updateAuthAction({ status: "ESTABLISHING" }));
+    const { token } = await refreshToken();
+    const payload = {
+      token,
+      authenticated: true,
+      status: "FINISHED",
+    };
+    dispatch(updateAuthAction(payload));
+  } catch (error) {
+    // do nothing
+  }
+};
+
 const fetchDeleteClient = (userId: string) => async (
   dispatch: Dispatch,
   getState: () => IRootState
@@ -143,4 +161,5 @@ export {
   fetchAuthUser,
   fetchAddClientToProfessional,
   fetchDeleteClient,
+  fetchOrUpdateToken,
 };
