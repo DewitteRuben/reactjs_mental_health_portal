@@ -2,8 +2,9 @@ import { Action, ActionCreator, Dispatch } from "redux";
 import { IAuthStore } from "../reducers/authReducer";
 import { IRootState } from "../store";
 import { auth, refreshToken } from "../../api/authApi";
-import { registerClient } from "../../api/professionalApi";
+import { registerClient, removeClient } from "../../api/professionalApi";
 import jwtDecode from "jwt-decode";
+import _ from "lodash";
 
 const AUTH_ACTIONS = {
   UPDATE_AUTH_STATE: "UPDATE_AUTH_STATE",
@@ -23,7 +24,7 @@ const updateAuthAction: ActionCreator<IUpdateAuthAction> = (
 const checkToken = async (
   dispatch: Dispatch,
   getState: () => IRootState
-): Promise<{ valid: boolean; message: string; token?: string }> => {
+): Promise<{ valid: boolean; message: string; token: string }> => {
   return new Promise(async (resolve, reject) => {
     const { token } = getState().auth;
 
@@ -65,6 +66,33 @@ const checkToken = async (
   });
 };
 
+const fetchDeleteClient = (userId: string) => async (
+  dispatch: Dispatch,
+  getState: () => IRootState
+) => {
+  dispatch(updateAuthAction({ status: "UPDATING" }));
+
+  const { token } = await checkToken(dispatch, getState);
+
+  try {
+    await removeClient(token)(userId);
+
+    const professional = _.cloneDeep(getState().auth.professional);
+
+    if (!professional) throw new Error("Unauthorized");
+
+    const updatedClients = professional?.clients.filter(
+      (client) => client.userId !== userId
+    );
+
+    professional.clients = updatedClients;
+
+    dispatch(updateAuthAction({ professional }));
+  } catch (error) {
+    dispatch(updateAuthAction({ status: "FAILED", error }));
+  }
+};
+
 const fetchAddClientToProfessional = (
   email: string,
   firstName: string,
@@ -74,8 +102,6 @@ const fetchAddClientToProfessional = (
   dispatch(updateAuthAction({ status: "UPDATING" }));
   try {
     const { token } = await checkToken(dispatch, getState);
-
-    if (!token) throw new Error("Token has expired or is missing.");
 
     const { professional } = await registerClient(token)(
       email,
@@ -116,4 +142,5 @@ export {
   updateAuthAction,
   fetchAuthUser,
   fetchAddClientToProfessional,
+  fetchDeleteClient,
 };
