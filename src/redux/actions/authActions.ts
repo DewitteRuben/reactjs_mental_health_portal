@@ -72,9 +72,10 @@ const fetchOrUpdateToken = () => async (
 ) => {
   try {
     dispatch(updateAuthAction({ status: "ESTABLISHING" }));
-    const { token } = await refreshToken();
+    const { token, professional } = await refreshToken();
     const payload = {
       token,
+      professional,
       authenticated: true,
       status: "FINISHED",
     };
