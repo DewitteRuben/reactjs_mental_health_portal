@@ -19,6 +19,7 @@
     "date-fns": "^2.14.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",
+    "qrcode.react": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
@@ -53,6 +54,7 @@
   "devDependencies": {
     "@types/jwt-decode": "^2.2.1",
     "@types/lodash": "^4.14.152",
+    "@types/qrcode.react": "^1.0.1",
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5"
   }
