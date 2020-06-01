@@ -7,4 +7,11 @@ const selectProfessionalClients = (state: IRootState) =>
 
 const selectAuthError = (state: IRootState) => state.auth.error;
 
-export { selectAuthenticated, selectProfessionalClients, selectAuthError };
+const selectAuthStatus = (state: IRootState) => state.auth.status;
+
+export {
+  selectAuthenticated,
+  selectProfessionalClients,
+  selectAuthError,
+  selectAuthStatus,
+};

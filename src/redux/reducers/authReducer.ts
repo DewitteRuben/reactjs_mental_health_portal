@@ -1,15 +1,17 @@
 import { IProfessional } from "../../api/authApi";
 import { AuthActions, AUTH_ACTIONS } from "../actions/authActions";
 
+export type AuthStatus =
+  | "IDLE"
+  | "ESTABLISHING"
+  | "FAILED"
+  | "UPDATING"
+  | "UPDATED"
+  | "FINISHED"
+  | "EXPIRED";
+
 export interface IAuthStore {
-  status:
-    | "IDLE"
-    | "ESTABLISHING"
-    | "FAILED"
-    | "UPDATING"
-    | "UPDATED"
-    | "FINISHED"
-    | "EXPIRED";
+  status: AuthStatus;
   error: Error | null;
   authenticated: boolean;
   token: string | null;
