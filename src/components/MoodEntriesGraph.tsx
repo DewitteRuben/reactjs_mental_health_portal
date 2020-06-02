@@ -51,6 +51,10 @@ class MoodEntriesGraph extends React.Component<IMoodEntriesGraphProps> {
   render() {
     const { entries } = this.props;
 
+    if (!entries.length) {
+      return null;
+    }
+
     return (
       <Line
         options={{
