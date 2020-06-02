@@ -2,14 +2,13 @@ import React from "react";
 import {
   AppBar,
   Toolbar,
-  IconButton,
   Typography,
   Button,
   makeStyles,
   Theme,
   createStyles,
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import DashboardIcon from "@material-ui/icons/Dashboard";
 import PersonIcon from "@material-ui/icons/Person";
 import { Link } from "react-router-dom";
 import { selectAuthenticated } from "../redux/selectors/authSelectors";
@@ -42,14 +41,24 @@ const Header: React.FC<IHeaderProps> = ({ authenticated }) => {
             Mental Health Portal
           </Typography>
           {authenticated ? (
-            <Button
-              to="/profile"
-              component={Link}
-              color="inherit"
-              startIcon={<PersonIcon />}
-            >
-              Profile
-            </Button>
+            <>
+              <Button
+                to="/dashboard"
+                component={Link}
+                color="inherit"
+                startIcon={<DashboardIcon />}
+              >
+                Dashboard
+              </Button>
+              <Button
+                to="/profile"
+                component={Link}
+                color="inherit"
+                startIcon={<PersonIcon />}
+              >
+                Profile
+              </Button>
+            </>
           ) : (
             <>
               <Button to="/register" component={Link} color="inherit">
