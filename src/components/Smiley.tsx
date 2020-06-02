@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "material-ui-image";
 
-export type SmileyType = "verybad" | "bad" | "moderate" | "good" | "verygood";
+export type SmileyType = "veryBad" | "bad" | "moderate" | "good" | "veryGood";
 
 interface SmileyProps {
   type: SmileyType;
