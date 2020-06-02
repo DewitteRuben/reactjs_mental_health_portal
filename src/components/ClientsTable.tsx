@@ -17,6 +17,7 @@ import {
 import { IClient } from "../api/authApi";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import moment from "moment";
 
 interface IClientsTableProps {
   clients: IClient[];
@@ -109,7 +110,9 @@ const ClientsTable: React.FC<IClientsTableProps> = ({
                     <TableCell align="right">{email}</TableCell>
                     <TableCell align="right">{firstName}</TableCell>
                     <TableCell align="right">{lastName}</TableCell>
-                    <TableCell align="right">{birthDate}</TableCell>
+                    <TableCell align="right">
+                      {moment(birthDate).format("LL")}
+                    </TableCell>
                     <TableCell align="right">
                       <IconButton>
                         <EditIcon />
