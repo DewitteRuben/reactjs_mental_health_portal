@@ -31,9 +31,11 @@ export interface IMoodStore {
   loading: boolean;
   error?: Error;
   entries: IMoodEntry[];
+  userId?: string;
 }
 
 const initialState: IMoodStore = {
+  userId: undefined,
   status: "IDLE",
   loading: false,
   error: undefined,
@@ -46,14 +48,16 @@ const moodReducer = (
 ): IMoodStore => {
   switch (action.type) {
     case MOOD_ACTIONS.SET_MOOD_ENTRIES_ACTION:
-      const { entries } = action as ISetMoodEntriesAction;
-      return { ...state, entries, loading: false, status: "FINISHED" };
+      const { entries, userId } = action as ISetMoodEntriesAction;
+      return { ...state, userId, entries, loading: false, status: "FINISHED" };
     case MOOD_ACTIONS.UPDATE_MOOD_LOADING_STATE_ACTION:
       const { loading, status } = action as IUpdateLoadingStateAction;
       return { ...state, loading, status };
     case MOOD_ACTIONS.SET_MOOD_ERROR_ACTION:
       const { error } = action as ISetMoodErrorAction;
       return { ...state, error, loading: false, status: "FAILED" };
+    case MOOD_ACTIONS.CLEAR_MOOD_ENTRIES_ACTION:
+      return { ...state, entries: [], loading: false, status: "IDLE" };
     default:
       return state;
   }

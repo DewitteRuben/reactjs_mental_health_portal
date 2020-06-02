@@ -30,6 +30,7 @@ import {
   selectMoodLoading,
   selectMoodStatus,
   selectMoodEntriesDateAsc,
+  selectNeedsReload,
 } from "../redux/selectors/moodSelectors";
 import { IMoodStatus, IMoodEntry } from "../redux/reducers/moodReducer";
 import MoodEntriesGraph from "../components/MoodEntriesGraph";
@@ -71,20 +72,19 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IClientDetailProps {
   getClientById: (userId: string) => IClient | undefined;
   fetchEntriesByUserId: (userId: string) => void;
-  authenticated: boolean;
-  status: AuthStatus;
+  authStatus: AuthStatus;
   moodStatus: IMoodStatus;
-  moodLoadingState: boolean;
   entries: IMoodEntry[];
+  isDifferentUser: (userId: string) => boolean;
 }
 
 const ClientDetail: React.FC<IClientDetailProps> = ({
   getClientById,
-  authenticated,
-  status,
+  authStatus,
   fetchEntriesByUserId,
   entries,
   moodStatus,
+  isDifferentUser,
 }) => {
   const styles = useStyles();
   const [value, setValue] = React.useState("clientDetails");
@@ -97,7 +97,11 @@ const ClientDetail: React.FC<IClientDetailProps> = ({
     }
   }, [fetchEntriesByUserId, id]);
 
-  if (status === "ESTABLISHING" || moodStatus === "FETCHING") {
+  if (
+    isDifferentUser(id) ||
+    authStatus === "ESTABLISHING" ||
+    moodStatus === "FETCHING"
+  ) {
     return <Loading />;
   }
 
@@ -157,12 +161,11 @@ const ClientDetail: React.FC<IClientDetailProps> = ({
 };
 
 const mapStateToProps = (state: IRootState) => ({
-  authenticated: selectAuthenticated(state),
-  status: selectAuthStatus(state),
+  authStatus: selectAuthStatus(state),
   getClientById: (userId: string) => selectClientById(userId)(state),
   entries: selectMoodEntriesDateAsc(state),
-  moodLoadingState: selectMoodLoading(state),
   moodStatus: selectMoodStatus(state),
+  isDifferentUser: (userId: string) => selectNeedsReload(userId)(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({

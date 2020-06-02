@@ -13,9 +13,13 @@ const selectMoodStatus = (state: IRootState) => state.mood.status;
 
 const selectMoodLoading = (state: IRootState) => state.mood.loading;
 
+const selectNeedsReload = (currentUserId: string) => (state: IRootState) =>
+  state.mood.userId !== currentUserId;
+
 export {
   selectMoodEntries,
   selectMoodStatus,
   selectMoodLoading,
   selectMoodEntriesDateAsc,
+  selectNeedsReload,
 };
