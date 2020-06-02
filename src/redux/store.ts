@@ -1,9 +1,11 @@
+import thunk from "redux-thunk";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { authReducer } from "./reducers/authReducer";
-import thunk from "redux-thunk";
+import { moodReducer } from "./reducers/moodReducer";
 
 const reducers = combineReducers({
   auth: authReducer,
+  mood: moodReducer,
 });
 
 export type IRootState = ReturnType<typeof reducers>;
