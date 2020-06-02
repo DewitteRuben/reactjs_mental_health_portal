@@ -54,6 +54,10 @@ class MoodEntriesList extends React.Component<
     const { classes, entries } = this.props;
     const { selectedIndex } = this.state;
 
+    if (!entries.length) {
+      return <Typography>No entries have been added by the client yet.</Typography>;
+    }
+
     const selectedEntry = entries[selectedIndex];
 
     return (
