@@ -38,14 +38,6 @@ const Header: React.FC<IHeaderProps> = ({ authenticated }) => {
     <div>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={styles.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography variant="h6" className={styles.title}>
             Mental Health Portal
           </Typography>
