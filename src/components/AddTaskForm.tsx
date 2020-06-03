@@ -8,13 +8,16 @@ export interface IAddTaskFormData {
 
 interface IAddTaskFormProps {
   onChange?: (data: IAddTaskFormData) => void;
+  data?: IAddTaskFormData;
 }
 
-const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onChange }) => {
-  const [values, setValues] = React.useState({
-    title: "",
-    description: "",
-  });
+const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onChange, data }) => {
+  const [values, setValues] = React.useState(
+    data || {
+      title: "",
+      description: "",
+    }
+  );
 
   React.useEffect(() => {
     if (onChange) {
@@ -35,12 +38,14 @@ const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onChange }) => {
         onChange={onValueChange("title")}
         label="Title"
         margin="normal"
+        value={values.title}
         fullWidth
       />
       <TextField
         onChange={onValueChange("description")}
         label="Description"
         margin="normal"
+        value={values.description}
         fullWidth
       />
     </div>
