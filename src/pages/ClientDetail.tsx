@@ -9,9 +9,7 @@ import {
   Theme,
   createStyles,
   Box,
-  Typography,
 } from "@material-ui/core";
-import QRCode from "qrcode.react";
 import clsx from "clsx";
 import { IRootState } from "../redux/store";
 import {
@@ -32,29 +30,12 @@ import {
 } from "../redux/selectors/moodSelectors";
 import { IMoodStatus, IMoodEntry } from "../redux/reducers/moodReducer";
 import MoodEntriesGraph from "../components/MoodEntriesGraph";
-import moment from "moment";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: any;
-  value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`wrapped-tabpanel-${index}`}
-      aria-labelledby={`wrapped-tab-${index}`}
-      {...other}
-    >
-      {value === index && <div>{children}</div>}
-    </div>
-  );
-}
+import TaskTable from "../components/TaskTable";
+import { selectTasks } from "../redux/selectors/taskSelectors";
+import { fetchTasks } from "../redux/actions/taskActions";
+import { ITask } from "../redux/reducers/taskReducer";
+import TabPanel from "../components/TabPanel";
+import ClientInfo from "../components/ClientInfo";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,9 +51,11 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IClientDetailProps {
   getClientById: (userId: string) => IClient | undefined;
   fetchEntriesByUserId: (userId: string) => void;
+  fetchTasksByUserId: (userId: string) => void;
   authStatus: AuthStatus;
   moodStatus: IMoodStatus;
   entries: IMoodEntry[];
+  tasks: ITask[];
   isDifferentUser: (userId: string) => boolean;
 }
 
@@ -80,7 +63,9 @@ const ClientDetail: React.FC<IClientDetailProps> = ({
   getClientById,
   authStatus,
   fetchEntriesByUserId,
+  fetchTasksByUserId,
   entries,
+  tasks,
   moodStatus,
   isDifferentUser,
 }) => {
@@ -92,8 +77,9 @@ const ClientDetail: React.FC<IClientDetailProps> = ({
   React.useEffect(() => {
     if (id) {
       fetchEntriesByUserId(id);
+      fetchTasksByUserId(id);
     }
-  }, [fetchEntriesByUserId, id]);
+  }, [fetchEntriesByUserId, fetchTasksByUserId, id]);
 
   if (
     isDifferentUser(id) ||
@@ -111,8 +97,6 @@ const ClientDetail: React.FC<IClientDetailProps> = ({
     setValue(newValue);
   };
 
-  const { userId, email, firstName, lastName, birthDate } = client;
-
   return (
     <Container>
       <Paper className={styles.paper} square>
@@ -129,21 +113,7 @@ const ClientDetail: React.FC<IClientDetailProps> = ({
       </Paper>
       <Paper className={clsx(styles.paper, styles.content)}>
         <TabPanel value={value} index="clientDetails">
-          <Box display="flex">
-            <Box display="flex" flexDirection="column" alignItems="center">
-              <QRCode size={192} value={id} />
-              <Typography>{userId}</Typography>
-            </Box>
-            <Box marginRight={2} />
-            <div>
-              <Typography>Email: {email}</Typography>
-              <Typography>First name: {firstName}</Typography>
-              <Typography>Last name: {lastName}</Typography>
-              <Typography>
-                Birthdate: {moment(birthDate).format("LL")}
-              </Typography>
-            </div>
-          </Box>
+          <ClientInfo client={client} />
         </TabPanel>
         <TabPanel value={value} index="moodEntries">
           <MoodEntriesList entries={entries} />
@@ -151,7 +121,7 @@ const ClientDetail: React.FC<IClientDetailProps> = ({
           <MoodEntriesGraph entries={entries} />
         </TabPanel>
         <TabPanel value={value} index="tasks">
-          Item Three
+          <TaskTable tasks={tasks} userId={id} />
         </TabPanel>
       </Paper>
     </Container>
@@ -162,6 +132,7 @@ const mapStateToProps = (state: IRootState) => ({
   authStatus: selectAuthStatus(state),
   getClientById: (userId: string) => selectClientById(userId)(state),
   entries: selectMoodEntriesDateAsc(state),
+  tasks: selectTasks(state),
   moodStatus: selectMoodStatus(state),
   isDifferentUser: (userId: string) => selectNeedsReload(userId)(state),
 });
@@ -169,6 +140,7 @@ const mapStateToProps = (state: IRootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({
   fetchEntriesByUserId: (userId: string) =>
     dispatch(fetchMoodEntriesByUserId(userId)),
+  fetchTasksByUserId: (userId: string) => dispatch(fetchTasks(userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientDetail);
