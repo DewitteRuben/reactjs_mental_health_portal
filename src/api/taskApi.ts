@@ -4,6 +4,14 @@ const getTasks = (token: string) => {
   return request("/task", { ...createAuthHeader(token) });
 };
 
+const removeTask = (token: string) => (taskId: string) => {
+  return request("/task", {
+    method: "DELETE",
+    ...createAuthHeader(token),
+    body: JSON.stringify({ taskId }),
+  });
+};
+
 const addTask = (token: string) => (
   title: string,
   description: string,
@@ -16,4 +24,4 @@ const addTask = (token: string) => (
   });
 };
 
-export { getTasks, addTask };
+export { getTasks, addTask, removeTask };

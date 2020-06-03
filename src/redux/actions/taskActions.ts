@@ -2,15 +2,17 @@ import { Action, ActionCreator, Dispatch } from "redux";
 import { ITask, ITaskStatus } from "../reducers/taskReducer";
 import { IRootState } from "../store";
 import { authUser } from "../../api/moodApi";
-import { getTasks, addTask } from "../../api/taskApi";
+import { getTasks, addTask, removeTask } from "../../api/taskApi";
 import { checkToken } from "./authActions";
 
 const TASK_ACTIONS = {
   ADD_TASK_ACTION: "ADD_TASK_ACTION",
+  REMOVE_TASK_ACTION: "REMOVE_TASK_ACTION",
   SET_TASKS_ACTION: "SET_TASKS_ACTION",
   UPDATE_TASK_STATE_ACTION: "UPDATE_TASK_STATE_ACTION",
   SET_TASK_ERROR_ACTION: "SET_TASK_ERROR_ACTION",
 };
+
 export interface IAddTaskAction extends Action {
   task: ITask;
 }
@@ -29,6 +31,10 @@ export interface ISetTaskErrorAction extends Action {
   error?: Error;
 }
 
+export interface IRemoveTaskAction extends Action {
+  taskId: string;
+}
+
 const addTaskAction: ActionCreator<IAddTaskAction> = (task: ITask) => ({
   task,
   type: TASK_ACTIONS.ADD_TASK_ACTION,
@@ -39,6 +45,13 @@ const setTaskErrorAction: ActionCreator<ISetTaskErrorAction> = (
 ) => ({
   error,
   type: TASK_ACTIONS.SET_TASK_ERROR_ACTION,
+});
+
+const removeTaskAction: ActionCreator<IRemoveTaskAction> = (
+  taskId: string
+) => ({
+  type: TASK_ACTIONS.REMOVE_TASK_ACTION,
+  taskId,
 });
 
 const updateTaskStateAction: ActionCreator<IUpdateTaskStateAction> = (
@@ -65,6 +78,20 @@ const fetchTasks = (userId: string) => async (
     const { token } = await authUser(userId);
     const tasks = await getTasks(token);
     dispatch(setTasksAction(tasks, userId));
+  } catch (error) {
+    dispatch(setTaskErrorAction(error));
+  }
+};
+
+const fetchRemoveTask = (taskId: string) => async (
+  dispatch: Dispatch,
+  getState: () => IRootState
+) => {
+  const { token } = await checkToken(dispatch, getState);
+  dispatch(updateTaskStateAction("FETCHING", true));
+  try {
+    const { task } = await removeTask(token)(taskId);
+    dispatch(removeTaskAction(task.taskId));
   } catch (error) {
     dispatch(setTaskErrorAction(error));
   }
@@ -100,4 +127,4 @@ export type ITaskAction =
   | IUpdateTaskStateAction
   | ISetTaskErrorAction;
 
-export { TASK_ACTIONS, fetchAddTask, fetchTasks };
+export { TASK_ACTIONS, fetchAddTask, fetchTasks, fetchRemoveTask };

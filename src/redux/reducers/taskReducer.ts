@@ -4,6 +4,7 @@ import {
   ISetTasksAction,
   IAddTaskAction,
   ISetTaskErrorAction,
+  IRemoveTaskAction,
 } from "../actions/taskActions";
 
 export type ITaskStatus = "IDLE" | "FETCHING" | "FINISHED" | "FAILED";
@@ -51,6 +52,16 @@ const taskReducer = (state = initialState, action: ITaskAction): ITaskStore => {
     case TASK_ACTIONS.SET_TASK_ERROR_ACTION: {
       const { error } = action as ISetTaskErrorAction;
       return { ...state, error, loading: false, status: "FAILED" };
+    }
+    case TASK_ACTIONS.REMOVE_TASK_ACTION: {
+      const { tasks } = state;
+      const { taskId } = action as IRemoveTaskAction;
+      return {
+        ...state,
+        tasks: tasks.filter((t) => t.taskId !== taskId),
+        loading: false,
+        status: "FINISHED",
+      };
     }
     default:
       return state;
