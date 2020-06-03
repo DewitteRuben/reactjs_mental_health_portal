@@ -27,6 +27,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { fetchAddTask } from "../redux/actions/taskActions";
 import moment from "moment";
 import DeleteTaskDialog from "./DeleteTaskDialog";
+import EditTaskDialog from "./EditTaskFormDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,11 +55,17 @@ const TaskTable: React.FC<ITaskTableProps> = React.memo(
     const [visible, setVisibility] = React.useState({
       addDialog: false,
       deleteDialog: false,
+      editDialog: false,
     });
 
     const handleOnDeleteClick = (taskId: string) => () => {
       setSelectedTask(taskId);
       updateVisibility("deleteDialog", true);
+    };
+
+    const handleOnEditClick = (taskId: string) => () => {
+      setSelectedTask(taskId);
+      updateVisibility("editDialog", true);
     };
 
     const updateVisibility = React.useCallback(
@@ -127,7 +134,7 @@ const TaskTable: React.FC<ITaskTableProps> = React.memo(
                         : "Not yet completed"}
                     </TableCell>
                     <TableCell align="right">
-                      <IconButton>
+                      <IconButton onClick={handleOnEditClick(task.taskId)}>
                         <EditIcon />
                       </IconButton>
                       <IconButton onClick={handleOnDeleteClick(task.taskId)}>
@@ -153,6 +160,12 @@ const TaskTable: React.FC<ITaskTableProps> = React.memo(
           onVisibilityChange={handleOnVisibilityChange("deleteDialog")}
           visible={visible.deleteDialog}
           taskId={selectedTask}
+        />
+        <EditTaskDialog
+          onVisibilityChange={handleOnVisibilityChange("editDialog")}
+          visible={visible.editDialog}
+          taskId={selectedTask}
+          onSubmit={(data) => console.log(data)}
         />
       </>
     );
