@@ -163,4 +163,5 @@ export {
   fetchAddClientToProfessional,
   fetchDeleteClient,
   fetchOrUpdateToken,
+  checkToken,
 };
