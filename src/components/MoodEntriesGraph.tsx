@@ -35,7 +35,7 @@ const entriesToGraphData = (entries: IMoodEntry[]) => {
   }));
 };
 
-class MoodEntriesGraph extends React.Component<IMoodEntriesGraphProps> {
+class MoodEntriesGraph extends React.PureComponent<IMoodEntriesGraphProps> {
   handleOnPointClick = (elements: any) => {
     const { onPointClick } = this.props;
 

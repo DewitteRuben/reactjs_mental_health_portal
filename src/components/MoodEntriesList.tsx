@@ -36,7 +36,7 @@ const styles = (theme: Theme): Record<any, CSSProperties> => ({
   },
 });
 
-class MoodEntriesList extends React.Component<
+class MoodEntriesList extends React.PureComponent<
   IMoodEntriesListProps,
   IMoodEntriesListState
 > {
@@ -55,7 +55,9 @@ class MoodEntriesList extends React.Component<
     const { selectedIndex } = this.state;
 
     if (!entries.length) {
-      return <Typography>No entries have been added by the client yet.</Typography>;
+      return (
+        <Typography>No entries have been added by the client yet.</Typography>
+      );
     }
 
     const selectedEntry = entries[selectedIndex];

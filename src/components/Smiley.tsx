@@ -14,7 +14,7 @@ interface SmileyState {
 
 const DEFAULT_SMILEY_SIZE = 56;
 
-class Smiley extends React.Component<SmileyProps, SmileyState> {
+class Smiley extends React.PureComponent<SmileyProps, SmileyState> {
   state: SmileyState = { src: undefined };
 
   async componentDidMount() {
