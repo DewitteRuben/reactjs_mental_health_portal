@@ -17,7 +17,6 @@ import { IRootState } from "../redux/store";
 import {
   selectClientById,
   selectAuthStatus,
-  selectAuthenticated,
 } from "../redux/selectors/authSelectors";
 import { connect } from "react-redux";
 import { IClient } from "../api/authApi";
@@ -27,7 +26,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { fetchMoodEntriesByUserId } from "../redux/actions/moodActions";
 import MoodEntriesList from "../components/MoodEntriesList";
 import {
-  selectMoodLoading,
   selectMoodStatus,
   selectMoodEntriesDateAsc,
   selectNeedsReload,
