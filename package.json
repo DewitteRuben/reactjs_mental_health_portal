@@ -20,7 +20,7 @@
     "clsx": "^1.1.1",
     "date-fns": "^2.14.0",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.23",
     "material-ui-image": "^3.2.3",
     "moment": "^2.26.0",
     "qrcode.react": "^1.0.0",
